@@ -73,7 +73,6 @@ from typing import (
 )
 
 from typing_extensions import Literal
-from typing import Any, Callable, Dict, List, Match, Optional, Set, Tuple, Union
 
 import archspec.cpu
 
@@ -568,7 +567,7 @@ class ArchSpec:
     def concretize(self, tests: Union[bool, Iterable[str]] = False) -> None:
         self._dup(self.concretized(tests=tests))
 
-    def concretized(self, tests: Union[bool, Iterable[str]] = False) -> "spack.spec.Spec":
+    def concretized(self, tests: Union[bool, Iterable[str]] = False) -> "Spec":
         import spack.concretize
 
         msg = "`Spec.concretize` and `Spec.concretized` methods are deprecated and will be "
