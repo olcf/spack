@@ -202,14 +202,14 @@ def concretize(spec: Spec, tests: TestsType = False) -> Spec:
 
     spec = spec.lookup_hash()
 
+    if spec.concrete:
+        return spec.copy()
+
     for node in spec.traverse():
         if not node.name:
             raise spack.error.SpecError(
                 f"Spec {node} has no name; cannot concretize an anonymous spec"
             )
-
-    if spec.concrete:
-        return spec.copy()
 
     allow_deprecated = spack.config.get("config:deprecated", False)
     result = Solver().solve([spec], tests=tests, allow_deprecated=allow_deprecated)
