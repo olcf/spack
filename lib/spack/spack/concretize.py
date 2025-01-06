@@ -37,12 +37,11 @@ def enable_compiler_existence_check():
 
 SpecPairInput = Tuple[Spec, Optional[Spec]]
 SpecPair = Tuple[Spec, Spec]
-SpecLike = Union[Spec, str]
 TestsType = Union[bool, Iterable[str]]
 
 
 def concretize_specs_together(
-    abstract_specs: Sequence[SpecLike], tests: TestsType = False
+    abstract_specs: Sequence[Spec], tests: TestsType = False
 ) -> Sequence[Spec]:
     """Given a number of specs as input, tries to concretize them together.
 
