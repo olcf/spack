@@ -40,9 +40,9 @@ SpecPair = Tuple[Spec, Spec]
 TestsType = Union[bool, Iterable[str]]
 
 
-def concretize_specs_together(
+def _concretize_specs_together(
     abstract_specs: Sequence[Spec], tests: TestsType = False
-) -> Sequence[Spec]:
+) -> List[Spec]:
     """Given a number of specs as input, tries to concretize them together.
 
     Args:
@@ -70,7 +70,7 @@ def concretize_together(
     """
     to_concretize = [concrete if concrete else abstract for abstract, concrete in spec_list]
     abstract_specs = [abstract for abstract, _ in spec_list]
-    concrete_specs = concretize_specs_together(to_concretize, tests=tests)
+    concrete_specs = _concretize_specs_together(to_concretize, tests=tests)
     return list(zip(abstract_specs, concrete_specs))
 
 
