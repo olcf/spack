@@ -1905,30 +1905,6 @@ class Spec:
         """
         return self._concrete
 
-    def concretize(self, tests: Union[bool, Iterable[str]] = False) -> None:
-        from spack.concretize import concretize_one
-
-        warnings.warn(
-            "`Spec.concretize` is deprecated and will be removed in version 1.0.0. Use "
-            "`spack.concretize.concretize_one` instead.",
-            category=spack.error.SpackAPIWarning,
-            stacklevel=2,
-        )
-
-        self._dup(concretize_one(self, tests))
-
-    def concretized(self, tests: Union[bool, Iterable[str]] = False) -> "Spec":
-        from spack.concretize import concretize_one
-
-        warnings.warn(
-            "`Spec.concretized` is deprecated and will be removed in version 1.0.0. Use "
-            "`spack.concretize.concretize_one` instead.",
-            category=spack.error.SpackAPIWarning,
-            stacklevel=2,
-        )
-
-        return concretize_one(self, tests)
-
     @property
     def spliced(self):
         """Returns whether or not this Spec is being deployed as built i.e.
@@ -2956,6 +2932,18 @@ class Spec:
             msg += "    For each package listed, choose another spec\n"
             raise SpecDeprecatedError(msg)
 
+    def concretize(self, tests: Union[bool, Iterable[str]] = False) -> None:
+        from spack.concretize import concretize_one
+
+        warnings.warn(
+            "`Spec.concretize` is deprecated and will be removed in version 1.0.0. Use "
+            "`spack.concretize.concretize_one` instead.",
+            category=spack.error.SpackAPIWarning,
+            stacklevel=2,
+        )
+
+        self._dup(concretize_one(self, tests))
+
     def _mark_root_concrete(self, value=True):
         """Mark just this spec (not dependencies) concrete."""
         if (not value) and self.concrete and self.installed:
@@ -3042,6 +3030,18 @@ class Spec:
         # DAG hash.
         for spec in self.traverse():
             spec._cached_hash(ht.dag_hash)
+
+    def concretized(self, tests: Union[bool, Iterable[str]] = False) -> "Spec":
+        from spack.concretize import concretize_one
+
+        warnings.warn(
+            "`Spec.concretized` is deprecated and will be removed in version 1.0.0. Use "
+            "`spack.concretize.concretize_one` instead.",
+            category=spack.error.SpackAPIWarning,
+            stacklevel=2,
+        )
+
+        return concretize_one(self, tests)
 
     def index(self, deptype="all"):
         """Return a dictionary that points to all the dependencies in this
