@@ -34,7 +34,7 @@ def ensure_module_files_are_there(mock_repo_path, mock_store, mock_configuration
 
 
 def _module_files(module_type, *specs):
-    specs = [spack.concretize.concretize(spack.spec.Spec(x)) for x in specs]
+    specs = [spack.concretize.concretize_one(spack.spec.Spec(x)) for x in specs]
     writer_cls = spack.modules.module_types[module_type]
     return [writer_cls(spec, "default").layout.filename for spec in specs]
 
@@ -186,8 +186,8 @@ def test_setdefault_command(mutable_database, mutable_config):
     other_spec, preferred = "pkg-a@1.0", "pkg-a@2.0"
 
     specs = [
-        spack.concretize.concretize(spack.spec.Spec(other_spec)),
-        spack.concretize.concretize(spack.spec.Spec(preferred)),
+        spack.concretize.concretize_one(spack.spec.Spec(other_spec)),
+        spack.concretize.concretize_one(spack.spec.Spec(preferred)),
     ]
     PackageInstaller([s.package for s in specs], explicit=True, fake=True).install()
 

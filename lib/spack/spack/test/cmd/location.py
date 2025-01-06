@@ -26,7 +26,7 @@ env = SpackCommand("env")
 @pytest.fixture
 def mock_spec():
     # Make it look like the source was actually expanded.
-    s = spack.concretize.concretize(spack.spec.Spec("externaltest"))
+    s = spack.concretize.concretize_one(spack.spec.Spec("externaltest"))
     source_path = s.package.stage.source_path
     mkdirp(source_path)
     yield s, s.package

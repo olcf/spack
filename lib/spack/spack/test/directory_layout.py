@@ -60,7 +60,7 @@ def test_yaml_directory_layout_parameters(tmpdir, default_mock_concretization):
     assert package7 == path_package7
 
     # Test separation of architecture or namespace
-    spec2 = spack.concretize.concretize(Spec("libelf"))
+    spec2 = spack.concretize.concretize_one(Spec("libelf"))
 
     arch_scheme = (
         "{architecture.platform}/{architecture.target}/{architecture.os}/{name}/{version}/{hash:7}"
@@ -98,7 +98,7 @@ def test_read_and_write_spec(temporary_store, config, mock_packages):
         # If a spec fails to concretize, just skip it.  If it is a
         # real error, it will be caught by concretization tests.
         try:
-            spec = spack.concretize.concretize(spack.spec.Spec(name))
+            spec = spack.concretize.concretize_one(spack.spec.Spec(name))
         except Exception:
             continue
 
@@ -137,7 +137,7 @@ def test_read_and_write_spec(temporary_store, config, mock_packages):
         assert norm.eq_dag(spec_from_file)
 
         # TODO: revise this when build deps are in dag_hash
-        conc = spack.concretize.concretize(read_separately).copy(deps=stored_deptypes)
+        conc = spack.concretize.concretize_one(read_separately).copy(deps=stored_deptypes)
         assert conc == spec_from_file
         assert conc.eq_dag(spec_from_file)
 
@@ -176,7 +176,7 @@ def test_handle_unknown_package(temporary_store, config, mock_packages, tmp_path
         # If a spec fails to concretize, just skip it.  If it is a
         # real error, it will be caught by concretization tests.
         try:
-            spec = spack.concretize.concretize(spack.spec.Spec(pkg_name))
+            spec = spack.concretize.concretize_one(spack.spec.Spec(pkg_name))
         except Exception:
             continue
 
@@ -208,7 +208,7 @@ def test_find(temporary_store, config, mock_packages):
         if name.startswith("external"):
             # External package tests cannot be installed
             continue
-        spec = spack.concretize.concretize(spack.spec.Spec(name))
+        spec = spack.concretize.concretize_one(spack.spec.Spec(name))
         installed_specs[spec.name] = spec
         layout.create_install_directory(spec)
 

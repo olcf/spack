@@ -25,7 +25,7 @@ def test_build_task_errors(install_mockery):
         inst.BuildTask(pkg_cls(spec), None)
 
     # Using a concretized package now means the request argument is checked.
-    spec = spack.concretize.concretize(spec)
+    spec = spack.concretize.concretize_one(spec)
     assert spec.concrete
 
     with pytest.raises(TypeError, match="is not a valid build request"):
@@ -48,7 +48,7 @@ def test_build_task_errors(install_mockery):
 
 
 def test_build_task_basics(install_mockery):
-    spec = spack.concretize.concretize(spack.spec.Spec("dependent-install"))
+    spec = spack.concretize.concretize_one(spack.spec.Spec("dependent-install"))
     assert spec.concrete
 
     # Ensure key properties match expectations
@@ -69,7 +69,7 @@ def test_build_task_basics(install_mockery):
 def test_build_task_strings(install_mockery):
     """Tests of build_task repr and str for coverage purposes."""
     # Using a package with one dependency
-    spec = spack.concretize.concretize(spack.spec.Spec("dependent-install"))
+    spec = spack.concretize.concretize_one(spack.spec.Spec("dependent-install"))
     assert spec.concrete
 
     # Ensure key properties match expectations

@@ -66,7 +66,7 @@ def make_installer(parser, args):
     """
     if sys.platform == "win32":
         output_dir = args.output_dir
-        cmake_spec = spack.concretize.concretize(Spec("cmake"))
+        cmake_spec = spack.concretize.concretize_one(Spec("cmake"))
         cmake_path = os.path.join(cmake_spec.prefix, "bin", "cmake.exe")
         cpack_path = os.path.join(cmake_spec.prefix, "bin", "cpack.exe")
         spack_source = args.spack_source

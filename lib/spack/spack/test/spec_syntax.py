@@ -777,7 +777,7 @@ def test_spec_by_hash_tokens(text, tokens):
 @pytest.mark.db
 def test_spec_by_hash(database, monkeypatch, config):
     mpileaks = database.query_one("mpileaks ^zmpi")
-    b = spack.concretize.concretize(spack.spec.Spec("pkg-b"))
+    b = spack.concretize.concretize_one(spack.spec.Spec("pkg-b"))
     monkeypatch.setattr(spack.binary_distribution, "update_cache_and_get_specs", lambda: [b])
 
     hash_str = f"/{mpileaks.dag_hash()}"
@@ -874,7 +874,7 @@ def test_ambiguous_hash(mutable_database):
     In the past this ambiguity error would happen during parse time."""
 
     # This is a very sketchy as manually setting hashes easily breaks invariants
-    x1 = spack.concretize.concretize(spack.spec.Spec("pkg-a"))
+    x1 = spack.concretize.concretize_one(spack.spec.Spec("pkg-a"))
     x2 = x1.copy()
     x1._hash = "xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
     x1._process_hash = "xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
@@ -948,8 +948,8 @@ def test_nonexistent_hash(database, config):
     ],
 )
 def test_disambiguate_hash_by_spec(spec1, spec2, constraint, mock_packages, monkeypatch, config):
-    spec1_concrete = spack.concretize.concretize(spack.spec.Spec(spec1))
-    spec2_concrete = spack.concretize.concretize(spack.spec.Spec(spec2))
+    spec1_concrete = spack.concretize.concretize_one(spack.spec.Spec(spec1))
+    spec2_concrete = spack.concretize.concretize_one(spack.spec.Spec(spec2))
 
     spec1_concrete._hash = "spec1"
     spec2_concrete._hash = "spec2"
@@ -1140,7 +1140,7 @@ def test_parse_filename_missing_slash_as_spec(specfile_for, tmpdir, filename):
     # Check that if we concretize this spec, we get a good error
     # message that mentions we might've meant a file.
     with pytest.raises(spack.repo.UnknownEntityError) as exc_info:
-        spack.concretize.concretize(spec)
+        spack.concretize.concretize_one(spec)
     assert exc_info.value.long_message
     assert (
         "Did you mean to specify a filename with './libelf.yaml'?" in exc_info.value.long_message
@@ -1148,7 +1148,7 @@ def test_parse_filename_missing_slash_as_spec(specfile_for, tmpdir, filename):
 
     # make sure that only happens when the spec ends in yaml
     with pytest.raises(spack.repo.UnknownPackageError) as exc_info:
-        spack.concretize.concretize(SpecParser("builtin.mock.doesnotexist").next_spec())
+        spack.concretize.concretize_one(SpecParser("builtin.mock.doesnotexist").next_spec())
     assert not exc_info.value.long_message or (
         "Did you mean to specify a filename with" not in exc_info.value.long_message
     )

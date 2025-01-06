@@ -108,7 +108,7 @@ def test_roundtrip_concrete_specs(abstract_spec, default_mock_concretization):
 
 
 def test_yaml_subdag(config, mock_packages):
-    spec = spack.concretize.concretize(Spec("mpileaks^mpich+debug"))
+    spec = spack.concretize.concretize_one(Spec("mpileaks^mpich+debug"))
     yaml_spec = Spec.from_yaml(spec.to_yaml())
     json_spec = Spec.from_json(spec.to_json())
 
@@ -153,7 +153,7 @@ def test_ordered_read_not_required_for_consistent_dag_hash(config, mock_packages
     """
     specs = ["mpileaks ^zmpi", "dttop", "dtuse"]
     for spec in specs:
-        spec = spack.concretize.concretize(Spec(spec))
+        spec = spack.concretize.concretize_one(Spec(spec))
 
         #
         # Dict & corresponding YAML & JSON from the original spec.
@@ -213,11 +213,15 @@ def test_ordered_read_not_required_for_consistent_dag_hash(config, mock_packages
         assert spec.dag_hash() == round_trip_reversed_json_spec.dag_hash()
 
         # dag_hash is equal after round-trip by dag_hash
-        spec = spack.concretize.concretize(spec)
-        round_trip_yaml_spec = spack.concretize.concretize(round_trip_yaml_spec)
-        round_trip_json_spec = spack.concretize.concretize(round_trip_json_spec)
-        round_trip_reversed_yaml_spec = spack.concretize.concretize(round_trip_reversed_yaml_spec)
-        round_trip_reversed_json_spec = spack.concretize.concretize(round_trip_reversed_json_spec)
+        spec = spack.concretize.concretize_one(spec)
+        round_trip_yaml_spec = spack.concretize.concretize_one(round_trip_yaml_spec)
+        round_trip_json_spec = spack.concretize.concretize_one(round_trip_json_spec)
+        round_trip_reversed_yaml_spec = spack.concretize.concretize_one(
+            round_trip_reversed_yaml_spec
+        )
+        round_trip_reversed_json_spec = spack.concretize.concretize_one(
+            round_trip_reversed_json_spec
+        )
         assert spec.dag_hash() == round_trip_yaml_spec.dag_hash()
         assert spec.dag_hash() == round_trip_json_spec.dag_hash()
         assert spec.dag_hash() == round_trip_reversed_yaml_spec.dag_hash()
@@ -321,7 +325,7 @@ def test_save_dependency_spec_jsons_subset(tmpdir, config):
     builder.add_package("pkg-a", dependencies=[("pkg-b", None, None), ("pkg-c", None, None)])
 
     with spack.repo.use_repositories(builder.root):
-        spec_a = spack.concretize.concretize(Spec("pkg-a"))
+        spec_a = spack.concretize.concretize_one(Spec("pkg-a"))
         b_spec = spec_a["pkg-b"]
         c_spec = spec_a["pkg-c"]
 
@@ -388,7 +392,7 @@ spec:
     build_hash: iaapywazxgetn6gfv2cfba353qzzqvhy
 """
     spec = Spec.from_yaml(yaml)
-    concrete_spec = spack.concretize.concretize(spec)
+    concrete_spec = spack.concretize.concretize_one(spec)
     assert concrete_spec.eq_dag(spec)
 
 

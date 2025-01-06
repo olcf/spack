@@ -309,7 +309,7 @@ def test_checksum_url(mock_packages, config):
 
 
 def test_checksum_verification_fails(default_mock_concretization, capsys, can_fetch_versions):
-    spec = spack.concretize.concretize(spack.spec.Spec("zlib"))
+    spec = spack.concretize.concretize_one(spack.spec.Spec("zlib"))
     pkg = spec.package
     versions = list(pkg.versions.keys())
     version_hashes = {versions[0]: "abadhash", Version("0.1"): "123456789"}

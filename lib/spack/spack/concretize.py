@@ -187,11 +187,11 @@ def _concretize_task(packed_arguments: Tuple[int, str, TestsType]) -> Tuple[int,
     index, spec_str, tests = packed_arguments
     with tty.SuppressOutput(msg_enabled=False):
         start = time.time()
-        spec = concretize(Spec(spec_str), tests=tests)
+        spec = concretize_one(Spec(spec_str), tests=tests)
         return index, spec, time.time() - start
 
 
-def concretize(spec: Spec, tests: TestsType = False) -> Spec:
+def concretize_one(spec: Spec, tests: TestsType = False) -> Spec:
     """Return a concretized copy of the given spec.
 
     Args:

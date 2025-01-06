@@ -58,7 +58,7 @@ def test_error_messages(error_messages, config_set, spec, mock_packages, mutable
         spack.config.set(path, conf)
 
     with pytest.raises(spack.solver.asp.UnsatisfiableSpecError) as e:
-        _ = spack.concretize.concretize(spack.spec.Spec(spec))
+        _ = spack.concretize.concretize_one(spack.spec.Spec(spec))
 
     for em in error_messages:
         assert em in str(e.value)

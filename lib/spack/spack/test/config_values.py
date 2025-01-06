@@ -14,7 +14,7 @@ import spack.store
 def test_set_install_hash_length(hash_length, mutable_config, tmpdir):
     mutable_config.set("config:install_hash_length", hash_length)
     with spack.store.use_store(str(tmpdir)):
-        spec = spack.concretize.concretize(spack.spec.Spec("libelf"))
+        spec = spack.concretize.concretize_one(spack.spec.Spec("libelf"))
         prefix = spec.prefix
         hash_str = prefix.rsplit("-")[-1]
         assert len(hash_str) == hash_length
@@ -24,7 +24,7 @@ def test_set_install_hash_length(hash_length, mutable_config, tmpdir):
 def test_set_install_hash_length_upper_case(mutable_config, tmpdir):
     mutable_config.set("config:install_hash_length", 5)
     with spack.store.use_store(str(tmpdir), extra_data={"projections": {"all": "{name}-{HASH}"}}):
-        spec = spack.concretize.concretize(spack.spec.Spec("libelf"))
+        spec = spack.concretize.concretize_one(spack.spec.Spec("libelf"))
         prefix = spec.prefix
         hash_str = prefix.rsplit("-")[-1]
         assert len(hash_str) == 5

@@ -1057,7 +1057,7 @@ spack:
     with working_dir(tmp_path):
         env_cmd("create", "test", "./spack.yaml")
         with ev.read("test"):
-            concrete_spec = spack.concretize.concretize(Spec("callpath"))
+            concrete_spec = spack.concretize.concretize_one(Spec("callpath"))
             with open(tmp_path / "spec.json", "w", encoding="utf-8") as f:
                 f.write(concrete_spec.to_json(hash=ht.dag_hash))
 
@@ -1178,10 +1178,10 @@ def test_ci_generate_read_broken_specs_url(
     ci_base_environment,
 ):
     """Verify that `broken-specs-url` works as intended"""
-    spec_a = spack.concretize.concretize(Spec("pkg-a"))
+    spec_a = spack.concretize.concretize_one(Spec("pkg-a"))
     a_dag_hash = spec_a.dag_hash()
 
-    spec_flattendeps = spack.concretize.concretize(Spec("flatten-deps"))
+    spec_flattendeps = spack.concretize.concretize_one(Spec("flatten-deps"))
     flattendeps_dag_hash = spec_flattendeps.dag_hash()
 
     broken_specs_url = tmp_path.as_uri()
@@ -1532,7 +1532,7 @@ spack:
 """
         )
 
-    spec_a = spack.concretize.concretize(Spec("pkg-a"))
+    spec_a = spack.concretize.concretize_one(Spec("pkg-a"))
 
     return gitlab_generator.get_job_name(spec_a)
 

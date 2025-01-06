@@ -134,8 +134,8 @@ def test_repo(_create_test_repo, monkeypatch, mock_stage):
 
 
 def test_diff_ignore(test_repo):
-    specA = spack.concretize.concretize(spack.spec.Spec("p1+usev1"))
-    specB = spack.concretize.concretize(spack.spec.Spec("p1~usev1"))
+    specA = spack.concretize.concretize_one(spack.spec.Spec("p1+usev1"))
+    specB = spack.concretize.concretize_one(spack.spec.Spec("p1~usev1"))
 
     c1 = spack.cmd.diff.compare_specs(specA, specB, to_string=False)
 
@@ -155,8 +155,8 @@ def test_diff_ignore(test_repo):
 
     # Check ignoring changes on multiple packages
 
-    specA = spack.concretize.concretize(spack.spec.Spec("p1+usev1 ^p3+p3var"))
-    specA = spack.concretize.concretize(spack.spec.Spec("p1~usev1 ^p3~p3var"))
+    specA = spack.concretize.concretize_one(spack.spec.Spec("p1+usev1 ^p3+p3var"))
+    specA = spack.concretize.concretize_one(spack.spec.Spec("p1~usev1 ^p3~p3var"))
 
     c3 = spack.cmd.diff.compare_specs(specA, specB, to_string=False)
     assert find(c3["a_not_b"], "variant_value", ["p3", "p3var"])
@@ -169,8 +169,8 @@ def test_diff_ignore(test_repo):
 def test_diff_cmd(install_mockery, mock_fetch, mock_archive, mock_packages):
     """Test that we can install two packages and diff them"""
 
-    specA = spack.concretize.concretize(spack.spec.Spec("mpileaks"))
-    specB = spack.concretize.concretize(spack.spec.Spec("mpileaks+debug"))
+    specA = spack.concretize.concretize_one(spack.spec.Spec("mpileaks"))
+    specB = spack.concretize.concretize_one(spack.spec.Spec("mpileaks+debug"))
 
     # Specs should be the same as themselves
     c = spack.cmd.diff.compare_specs(specA, specA, to_string=True)

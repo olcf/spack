@@ -60,8 +60,8 @@ def test_constraints_from_context_are_merged(mock_packages):
 
 @pytest.mark.regression("27754")
 def test_extends_spec(config, mock_packages):
-    extender = spack.concretize.concretize(spack.spec.Spec("extends-spec"))
-    extendee = spack.concretize.concretize(spack.spec.Spec("extendee"))
+    extender = spack.concretize.concretize_one(spack.spec.Spec("extends-spec"))
+    extendee = spack.concretize.concretize_one(spack.spec.Spec("extendee"))
 
     assert extender.dependencies
     assert extender.package.extends(extendee)
@@ -207,7 +207,7 @@ def test_repo(_create_test_repo, monkeypatch, mock_stage):
 def test_redistribute_directive(test_repo, spec_str, distribute_src, distribute_bin):
     spec = spack.spec.Spec(spec_str)
     assert spec.package_class.redistribute_source(spec) == distribute_src
-    concretized_spec = spack.concretize.concretize(spec)
+    concretized_spec = spack.concretize.concretize_one(spec)
     assert concretized_spec.package.redistribute_binary == distribute_bin
 
 

@@ -186,7 +186,7 @@ def test_adhoc_version_submodules(
     monkeypatch.setitem(pkg_class.versions, Version("git"), t.args)
     monkeypatch.setattr(pkg_class, "git", "file://%s" % mock_git_repository.path, raising=False)
 
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         Spec("git-test@{0}".format(mock_git_repository.unversioned_commit))
     )
     spec.package.do_stage()

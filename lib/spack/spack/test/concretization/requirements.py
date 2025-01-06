@@ -43,7 +43,7 @@ packages:
     - "~shared"
 """
     update_packages_config(conf_str)
-    y_spec = spack.concretize.concretize(Spec("y"))
+    y_spec = spack.concretize.concretize_one(Spec("y"))
     assert y_spec.satisfies("@2.4~shared")
 
 
@@ -58,7 +58,7 @@ packages:
 """
     update_packages_config(conf_str)
     with pytest.raises(UnsatisfiableSpecError):
-        spack.concretize.concretize(Spec("x@1.1"))
+        spack.concretize.concretize_one(Spec("x@1.1"))
 
 
 def test_require_undefined_version(concretize_scope, test_repo):
@@ -75,7 +75,7 @@ packages:
 """
     update_packages_config(conf_str)
     with pytest.raises(spack.error.ConfigError):
-        spack.concretize.concretize(Spec("x"))
+        spack.concretize.concretize_one(Spec("x"))
 
 
 def test_require_truncated(concretize_scope, test_repo):
@@ -90,7 +90,7 @@ packages:
     require: "@1"
 """
     update_packages_config(conf_str)
-    xspec = spack.concretize.concretize(Spec("x"))
+    xspec = spack.concretize.concretize_one(Spec("x"))
     assert xspec.satisfies("@1.1")
 
 
@@ -160,7 +160,7 @@ packages:
     )
     update_packages_config(conf_str)
 
-    s1 = spack.concretize.concretize(Spec("v"))
+    s1 = spack.concretize.concretize_one(Spec("v"))
     assert s1.satisfies("@2.2")
     # Make sure the git commit info is retained
     assert isinstance(s1.version, spack.version.GitVersion)
@@ -181,7 +181,7 @@ def test_requirement_adds_version_satisfies(
     )
 
     # Sanity check: early version of T does not include U
-    s0 = spack.concretize.concretize(Spec("t@2.0"))
+    s0 = spack.concretize.concretize_one(Spec("t@2.0"))
     assert not ("u" in s0)
 
     conf_str = """\
@@ -193,7 +193,7 @@ packages:
     )
     update_packages_config(conf_str)
 
-    s1 = spack.concretize.concretize(Spec("t"))
+    s1 = spack.concretize.concretize_one(Spec("t"))
     assert "u" in s1
     assert s1.satisfies("@2.2")
 
@@ -219,7 +219,7 @@ packages:
 """
     update_packages_config(conf_str)
 
-    s1 = spack.concretize.concretize(Spec("v"))
+    s1 = spack.concretize.concretize_one(Spec("v"))
     assert isinstance(s1.version, spack.version.GitVersion)
     assert s1.satisfies(f"v@{a_commit_hash}")
 
@@ -240,8 +240,8 @@ packages:
 """
     update_packages_config(conf_str)
 
-    assert spack.concretize.concretize(Spec("v")).satisfies(f"@{commits[0]}=2.2")
-    assert spack.concretize.concretize(Spec("v@2.3")).satisfies(f"v@{commits[1]}=2.3")
+    assert spack.concretize.concretize_one(Spec("v")).satisfies(f"@{commits[0]}=2.2")
+    assert spack.concretize.concretize_one(Spec("v@2.3")).satisfies(f"v@{commits[1]}=2.3")
 
 
 # TODO: this belongs in the concretize_preferences test module but uses
@@ -264,11 +264,11 @@ packages:
 """
     update_packages_config(conf_str)
 
-    assert spack.concretize.concretize(Spec("v")).satisfies(f"@{commits[0]}=2.2")
-    assert spack.concretize.concretize(Spec("v@2.3")).satisfies(f"@{commits[1]}=2.3")
+    assert spack.concretize.concretize_one(Spec("v")).satisfies(f"@{commits[0]}=2.2")
+    assert spack.concretize.concretize_one(Spec("v@2.3")).satisfies(f"@{commits[1]}=2.3")
 
     # When installing by hash, a lookup is triggered, so it's not mapped to =2.3.
-    s3 = spack.concretize.concretize(Spec(f"v@{commits[1]}"))
+    s3 = spack.concretize.concretize_one(Spec(f"v@{commits[1]}"))
     assert s3.satisfies(f"v@{commits[1]}")
     assert not s3.satisfies("@2.3")
 
@@ -288,7 +288,7 @@ packages:
 """
     update_packages_config(conf_str)
 
-    spec = spack.concretize.concretize(Spec("x"))
+    spec = spack.concretize.concretize_one(Spec("x"))
     assert spec["y"].satisfies("@2.7")
     assert spack.version.Version("2.7") not in spec["y"].package.versions
 
@@ -297,7 +297,7 @@ def test_requirement_is_successfully_applied(concretize_scope, test_repo):
     """If a simple requirement can be satisfied, make sure the
     concretization succeeds and the requirement spec is applied.
     """
-    s1 = spack.concretize.concretize(Spec("x"))
+    s1 = spack.concretize.concretize_one(Spec("x"))
     # Without any requirements/preferences, the later version is preferred
     assert s1.satisfies("@1.1")
 
@@ -307,7 +307,7 @@ packages:
     require: "@1.0"
 """
     update_packages_config(conf_str)
-    s2 = spack.concretize.concretize(Spec("x"))
+    s2 = spack.concretize.concretize_one(Spec("x"))
     # The requirement forces choosing the eariler version
     assert s2.satisfies("@1.0")
 
@@ -324,7 +324,7 @@ packages:
     require: "@2.4"
 """
     update_packages_config(conf_str)
-    spec = spack.concretize.concretize(Spec("x"))
+    spec = spack.concretize.concretize_one(Spec("x"))
     assert spec["x"].satisfies("@1.0")
     assert spec["y"].satisfies("@2.4")
 
@@ -340,7 +340,7 @@ packages:
     - one_of: ["@2.4", "~shared"]
 """
     update_packages_config(conf_str)
-    spec = spack.concretize.concretize(Spec("x"))
+    spec = spack.concretize.concretize_one(Spec("x"))
     # The concretizer only has to satisfy one of @2.4/~shared, and @2.4
     # comes first so it is prioritized
     assert spec["y"].satisfies("@2.4+shared")
@@ -359,10 +359,10 @@ packages:
 """
     update_packages_config(conf_str)
 
-    s1 = spack.concretize.concretize(Spec("y@2.5"))
+    s1 = spack.concretize.concretize_one(Spec("y@2.5"))
     assert s1.satisfies("%clang~shared")
 
-    s2 = spack.concretize.concretize(Spec("y@2.4"))
+    s2 = spack.concretize.concretize_one(Spec("y@2.4"))
     assert s2.satisfies("%gcc+shared")
 
 
@@ -378,10 +378,10 @@ packages:
 """
     update_packages_config(conf_str)
 
-    spec_mpich2 = spack.concretize.concretize(Spec("mpich2"))
+    spec_mpich2 = spack.concretize.concretize_one(Spec("mpich2"))
     assert spec_mpich2.satisfies("cflags=-g")
 
-    spec_mpi = spack.concretize.concretize(Spec("mpi"))
+    spec_mpi = spack.concretize.concretize_one(Spec("mpi"))
     assert spec_mpi.satisfies("mpich cflags=-O1")
 
 
@@ -404,7 +404,7 @@ packages:
 """
     update_packages_config(conf_str)
 
-    s1 = spack.concretize.concretize(Spec("v"))
+    s1 = spack.concretize.concretize_one(Spec("v"))
     assert s1.satisfies("@2.1")
 
 
@@ -421,10 +421,10 @@ packages:
 """
     update_packages_config(conf_str)
 
-    s1 = spack.concretize.concretize(Spec("y"))
+    s1 = spack.concretize.concretize_one(Spec("y"))
     assert s1.satisfies("@2.4")
 
-    s2 = spack.concretize.concretize(Spec("y@2.5"))
+    s2 = spack.concretize.concretize_one(Spec("y@2.5"))
     assert s2.satisfies("@2.5")
 
 
@@ -438,13 +438,13 @@ packages:
 
     store_dir = tmp_path / "store"
     with spack.store.use_store(str(store_dir)):
-        s1 = spack.concretize.concretize(Spec("y@2.5~shared"))
+        s1 = spack.concretize.concretize_one(Spec("y@2.5~shared"))
         PackageInstaller([s1.package], fake=True, explicit=True).install()
 
         update_packages_config(conf_str)
 
         with spack.config.override("concretizer:reuse", True):
-            s2 = spack.concretize.concretize(Spec("y"))
+            s2 = spack.concretize.concretize_one(Spec("y"))
             assert not s2.satisfies("@2.5~shared")
 
 
@@ -473,7 +473,7 @@ packages:
     update_packages_config(conf_str)
 
     with spack.config.override("config:deprecated", allow_deprecated):
-        s1 = spack.concretize.concretize(Spec("y"))
+        s1 = spack.concretize.concretize_one(Spec("y"))
         for constrain in expected:
             assert s1.satisfies(constrain)
 
@@ -491,7 +491,7 @@ packages:
 """
     update_packages_config(conf_str)
 
-    spec = spack.concretize.concretize(Spec(spec_str))
+    spec = spack.concretize.concretize_one(Spec(spec_str))
     for s in spec.traverse():
         assert s.satisfies(requirement_str)
 
@@ -518,7 +518,7 @@ packages:
 """
     update_packages_config(conf_str)
 
-    spec = spack.concretize.concretize(Spec("x"))
+    spec = spack.concretize.concretize_one(Spec("x"))
     assert spec.satisfies(specific_exp)
     for s in spec.traverse(root=False):
         assert s.satisfies(generic_exp)
@@ -533,7 +533,7 @@ packages:
 """
     update_packages_config(conf_str)
 
-    spec = spack.concretize.concretize(Spec("callpath"))
+    spec = spack.concretize.concretize_one(Spec("callpath"))
     assert "mpi" in spec
     assert mpi_requirement in spec
 
@@ -554,7 +554,7 @@ packages:
 """
     update_packages_config(conf_str)
 
-    spec = spack.concretize.concretize(Spec("callpath"))
+    spec = spack.concretize.concretize_one(Spec("callpath"))
     assert "mpi" in spec
     assert mpi_requirement in spec
     assert spec["mpi"].satisfies(specific_requirement)
@@ -571,7 +571,7 @@ def test_incompatible_virtual_requirements_raise(concretize_scope, mock_packages
     spec = Spec("callpath^zmpi")
     # TODO (multiple nodes): recover a better error message later
     with pytest.raises((UnsatisfiableSpecError, InternalConcretizerError)):
-        spack.concretize.concretize(spec)
+        spack.concretize.concretize_one(spec)
 
 
 def test_non_existing_variants_under_all(concretize_scope, mock_packages):
@@ -583,7 +583,7 @@ def test_non_existing_variants_under_all(concretize_scope, mock_packages):
     """
     update_packages_config(conf_str)
 
-    spec = spack.concretize.concretize(Spec("callpath^zmpi"))
+    spec = spack.concretize.concretize_one(Spec("callpath^zmpi"))
     assert "~foo" not in spec
 
 
@@ -658,7 +658,7 @@ def test_conditional_requirements_from_packages_yaml(
     and optional when the condition is not met.
     """
     update_packages_config(packages_yaml)
-    spec = spack.concretize.concretize(Spec(spec_str))
+    spec = spack.concretize.concretize_one(Spec(spec_str))
     for match_str, expected in expected_satisfies:
         assert spec.satisfies(match_str) is expected
 
@@ -734,7 +734,7 @@ def test_requirements_fail_with_custom_message(
     """
     update_packages_config(packages_yaml)
     with pytest.raises(spack.error.SpackError, match=expected_message):
-        spack.concretize.concretize(Spec(spec_str))
+        spack.concretize.concretize_one(Spec(spec_str))
 
 
 def test_skip_requirement_when_default_requirement_condition_cannot_be_met(
@@ -753,7 +753,7 @@ def test_skip_requirement_when_default_requirement_condition_cannot_be_met(
               when: "+shared"
     """
     update_packages_config(packages_yaml)
-    s = spack.concretize.concretize(Spec("mpileaks"))
+    s = spack.concretize.concretize_one(Spec("mpileaks"))
 
     assert s.satisfies("%clang+shared")
     # Sanity checks that 'callpath' doesn't have the shared variant, but that didn't
@@ -782,12 +782,12 @@ compilers::
     spack.config.CONFIG.clear_caches()
 
     # This package requires either clang or gcc
-    s = spack.concretize.concretize(Spec("requires_clang_or_gcc"))
+    s = spack.concretize.concretize_one(Spec("requires_clang_or_gcc"))
     assert s.satisfies("%gcc@12.0.0")
 
     # This package can only be compiled with clang
     with pytest.raises(spack.error.SpackError, match="can only be compiled with Clang"):
-        spack.concretize.concretize(Spec("requires_clang"))
+        spack.concretize.concretize_one(Spec("requires_clang"))
 
 
 @pytest.mark.parametrize(
@@ -841,17 +841,17 @@ def test_default_requirements_semantic(packages_yaml, concretize_scope, mock_pac
     update_packages_config(packages_yaml)
 
     # Regular zlib concretize to+shared
-    s = spack.concretize.concretize(Spec("zlib"))
+    s = spack.concretize.concretize_one(Spec("zlib"))
     assert s.satisfies("+shared")
 
     # If we specify the variant we can concretize only the one matching the constraint
-    s = spack.concretize.concretize(Spec("zlib+shared"))
+    s = spack.concretize.concretize_one(Spec("zlib+shared"))
     assert s.satisfies("+shared")
     with pytest.raises(UnsatisfiableSpecError):
-        spack.concretize.concretize(Spec("zlib~shared"))
+        spack.concretize.concretize_one(Spec("zlib~shared"))
 
     # A spec without the shared variant still concretize
-    s = spack.concretize.concretize(Spec("pkg-a"))
+    s = spack.concretize.concretize_one(Spec("pkg-a"))
     assert not s.satisfies("pkg-a+shared")
     assert not s.satisfies("pkg-a~shared")
 
@@ -912,7 +912,7 @@ def test_default_requirements_semantic_with_mv_variants(
     from MV variants.
     """
     update_packages_config(packages_yaml)
-    s = spack.concretize.concretize(Spec(spec_str))
+    s = spack.concretize.concretize_one(Spec(spec_str))
 
     for constraint in expected:
         assert s.satisfies(constraint), constraint
@@ -937,7 +937,7 @@ def test_requiring_package_on_multiple_virtuals(concretize_scope, mock_packages)
         require: intel-parallel-studio
     """
     )
-    s = spack.concretize.concretize(Spec("dla-future"))
+    s = spack.concretize.concretize_one(Spec("dla-future"))
 
     assert s["blas"].name == "intel-parallel-studio"
     assert s["lapack"].name == "intel-parallel-studio"
@@ -990,7 +990,7 @@ def test_strong_preferences_packages_yaml(
 ):
     """Tests that "preferred" specs are stronger than usual preferences, but can be overridden."""
     update_packages_config(packages_yaml)
-    s = spack.concretize.concretize(Spec(spec_str))
+    s = spack.concretize.concretize_one(Spec(spec_str))
 
     for constraint in expected:
         assert s.satisfies(constraint), constraint
@@ -1039,7 +1039,7 @@ def test_conflict_packages_yaml(packages_yaml, spec_str, concretize_scope, mock_
     """Tests conflicts that are specified from configuration files."""
     update_packages_config(packages_yaml)
     with pytest.raises(UnsatisfiableSpecError):
-        spack.concretize.concretize(Spec(spec_str))
+        spack.concretize.concretize_one(Spec(spec_str))
 
 
 @pytest.mark.parametrize(
@@ -1076,7 +1076,7 @@ def test_forward_multi_valued_variant_using_requires(
         for _val in ("shared", "static"):
             requires(f"^some-virtual-mv libs={_val}", when=f"libs={_val}^some-virtual-mv")
     """
-    s = spack.concretize.concretize(Spec(spec_str))
+    s = spack.concretize.concretize_one(Spec(spec_str))
 
     for constraint in expected:
         assert s.satisfies(constraint)
@@ -1087,7 +1087,7 @@ def test_forward_multi_valued_variant_using_requires(
 
 def test_strong_preferences_higher_priority_than_reuse(concretize_scope, mock_packages):
     """Tests that strong preferences have a higher priority than reusing specs."""
-    reused_spec = spack.concretize.concretize(Spec("adios2~bzip2"))
+    reused_spec = spack.concretize.concretize_one(Spec("adios2~bzip2"))
     reuse_nodes = list(reused_spec.traverse())
     root_specs = [Spec("ascent+adios2")]
 

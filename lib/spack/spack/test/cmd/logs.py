@@ -54,7 +54,7 @@ def disable_capture(capfd):
 
 
 def test_logs_cmd_errors(install_mockery, mock_fetch, mock_archive, mock_packages):
-    spec = spack.concretize.concretize(spack.spec.Spec("libelf"))
+    spec = spack.concretize.concretize_one(spack.spec.Spec("libelf"))
     assert not spec.installed
 
     with pytest.raises(spack.main.SpackCommandError, match="is not installed or staged"):
@@ -83,7 +83,7 @@ def test_dump_logs(install_mockery, mock_fetch, mock_archive, mock_packages, dis
     decompress them.
     """
     cmdline_spec = spack.spec.Spec("libelf")
-    concrete_spec = spack.concretize.concretize(cmdline_spec)
+    concrete_spec = spack.concretize.concretize_one(cmdline_spec)
 
     # Sanity check, make sure this test is checking what we want: to
     # start with

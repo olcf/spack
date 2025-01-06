@@ -206,9 +206,9 @@ def test_default_rpaths_create_install_default_layout(temporary_mirror_dir):
     Test the creation and installation of buildcaches with default rpaths
     into the default directory layout scheme.
     """
-    gspec = spack.concretize.concretize(Spec("garply"))
-    cspec = spack.concretize.concretize(Spec("corge"))
-    sy_spec = spack.concretize.concretize(Spec("symly"))
+    gspec = spack.concretize.concretize_one(Spec("garply"))
+    cspec = spack.concretize.concretize_one(Spec("corge"))
+    sy_spec = spack.concretize.concretize_one(Spec("symly"))
 
     # Install 'corge' without using a cache
     install_cmd("--no-cache", cspec.name)
@@ -255,9 +255,9 @@ def test_default_rpaths_install_nondefault_layout(temporary_mirror_dir):
     Test the creation and installation of buildcaches with default rpaths
     into the non-default directory layout scheme.
     """
-    cspec = spack.concretize.concretize(Spec("corge"))
+    cspec = spack.concretize.concretize_one(Spec("corge"))
     # This guy tests for symlink relocation
-    sy_spec = spack.concretize.concretize(Spec("symly"))
+    sy_spec = spack.concretize.concretize_one(Spec("symly"))
 
     # Install some packages with dependent packages
     # test install in non-default install path scheme
@@ -278,8 +278,8 @@ def test_relative_rpaths_install_default_layout(temporary_mirror_dir):
     Test the creation and installation of buildcaches with relative
     rpaths into the default directory layout scheme.
     """
-    gspec = spack.concretize.concretize(Spec("garply"))
-    cspec = spack.concretize.concretize(Spec("corge"))
+    gspec = spack.concretize.concretize_one(Spec("garply"))
+    cspec = spack.concretize.concretize_one(Spec("corge"))
 
     # Install buildcache created with relativized rpaths
     buildcache_cmd("install", "-uf", cspec.name)
@@ -308,7 +308,7 @@ def test_relative_rpaths_install_nondefault(temporary_mirror_dir):
     Test the installation of buildcaches with relativized rpaths
     into the non-default directory layout scheme.
     """
-    cspec = spack.concretize.concretize(Spec("corge"))
+    cspec = spack.concretize.concretize_one(Spec("corge"))
 
     # Test install in non-default install path scheme and relative path
     buildcache_cmd("install", "-uf", cspec.name)
@@ -361,8 +361,8 @@ def test_built_spec_cache(temporary_mirror_dir):
     that cache from a buildcache index."""
     buildcache_cmd("list", "-a", "-l")
 
-    gspec = spack.concretize.concretize(Spec("garply"))
-    cspec = spack.concretize.concretize(Spec("corge"))
+    gspec = spack.concretize.concretize_one(Spec("garply"))
+    cspec = spack.concretize.concretize_one(Spec("corge"))
 
     for s in [gspec, cspec]:
         results = bindist.get_mirrors_for_spec(s)
@@ -385,7 +385,7 @@ def test_spec_needs_rebuild(monkeypatch, tmpdir):
     mirror_dir = tmpdir.join("mirror_dir")
     mirror_url = url_util.path_to_file_url(mirror_dir.strpath)
 
-    s = spack.concretize.concretize(Spec("libdwarf"))
+    s = spack.concretize.concretize_one(Spec("libdwarf"))
 
     # Install a package
     install_cmd(s.name)
@@ -414,7 +414,7 @@ def test_generate_index_missing(monkeypatch, tmpdir, mutable_config):
     mirror_url = url_util.path_to_file_url(mirror_dir.strpath)
     spack.config.set("mirrors", {"test": mirror_url})
 
-    s = spack.concretize.concretize(Spec("libdwarf"))
+    s = spack.concretize.concretize_one(Spec("libdwarf"))
 
     # Install a package
     install_cmd("--no-cache", s.name)

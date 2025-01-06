@@ -24,7 +24,7 @@ pytestmark = [pytest.mark.disable_clean_stage_check]
 
 
 def test_dev_build_basics(tmpdir, install_mockery):
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec(f"dev-build-test-install@0.0.0 dev_path={tmpdir}")
     )
 
@@ -44,7 +44,7 @@ def test_dev_build_basics(tmpdir, install_mockery):
 
 
 def test_dev_build_before(tmpdir, install_mockery):
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec(f"dev-build-test-install@0.0.0 dev_path={tmpdir}")
     )
 
@@ -62,7 +62,7 @@ def test_dev_build_before(tmpdir, install_mockery):
 
 
 def test_dev_build_until(tmpdir, install_mockery):
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec(f"dev-build-test-install@0.0.0 dev_path={tmpdir}")
     )
 
@@ -82,7 +82,7 @@ def test_dev_build_until(tmpdir, install_mockery):
 
 def test_dev_build_until_last_phase(tmpdir, install_mockery):
     # Test that we ignore the last_phase argument if it is already last
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec(f"dev-build-test-install@0.0.0 dev_path={tmpdir}")
     )
 
@@ -102,7 +102,7 @@ def test_dev_build_until_last_phase(tmpdir, install_mockery):
 
 
 def test_dev_build_before_until(tmpdir, install_mockery):
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec(f"dev-build-test-install@0.0.0 dev_path={tmpdir}")
     )
 
@@ -140,7 +140,7 @@ def test_dev_build_drop_in(tmpdir, mock_packages, monkeypatch, install_mockery, 
 
 
 def test_dev_build_fails_already_installed(tmpdir, install_mockery):
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec("dev-build-test-install@0.0.0 dev_path=%s" % tmpdir)
     )
 
@@ -184,7 +184,7 @@ def test_dev_build_env(tmpdir, install_mockery, mutable_mock_env_path):
     """Test Spack does dev builds for packages in develop section of env."""
     # setup dev-build-test-install package for dev build
     build_dir = tmpdir.mkdir("build")
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec("dev-build-test-install@0.0.0 dev_path=%s" % build_dir)
     )
 
@@ -221,7 +221,7 @@ def test_dev_build_env_with_vars(tmpdir, install_mockery, mutable_mock_env_path,
     """Test Spack does dev builds for packages in develop section of env (path with variables)."""
     # setup dev-build-test-install package for dev build
     build_dir = tmpdir.mkdir("build")
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec(f"dev-build-test-install@0.0.0 dev_path={build_dir}")
     )
 
@@ -260,7 +260,7 @@ def test_dev_build_env_version_mismatch(tmpdir, install_mockery, mutable_mock_en
     """Test Spack constraints concretization by develop specs."""
     # setup dev-build-test-install package for dev build
     build_dir = tmpdir.mkdir("build")
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec("dev-build-test-install@0.0.0 dev_path=%s" % tmpdir)
     )
 
@@ -342,8 +342,8 @@ spack:
         with ev.read("test"):
             # Do concretization inside environment for dev info
             # These specs are the source of truth to compare against the installs
-            leaf_spec = spack.concretize.concretize(leaf_spec)
-            root_spec = spack.concretize.concretize(root_spec)
+            leaf_spec = spack.concretize.concretize_one(leaf_spec)
+            root_spec = spack.concretize.concretize_one(root_spec)
 
             # Do install
             install()
@@ -389,8 +389,8 @@ spack:
             # concretize in the environment to get the dev build info
             # equivalent to setting dev_build and dev_path variants
             # on all specs above
-            spec = spack.concretize.concretize(spec)
-            dep_spec = spack.concretize.concretize(dep_spec)
+            spec = spack.concretize.concretize_one(spec)
+            dep_spec = spack.concretize.concretize_one(dep_spec)
             install()
 
     # Ensure that both specs installed properly
@@ -414,7 +414,7 @@ def test_dev_build_rebuild_on_source_changes(
     """
     # setup dev-build-test-install package for dev build
     build_dir = tmpdir.mkdir("build")
-    spec = spack.concretize.concretize(
+    spec = spack.concretize.concretize_one(
         spack.spec.Spec("dev-build-test-install@0.0.0 dev_path=%s" % build_dir)
     )
 

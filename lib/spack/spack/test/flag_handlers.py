@@ -31,10 +31,10 @@ def add_o3_to_build_system_cflags(pkg, name, flags):
 class TestFlagHandlers:
     def test_no_build_system_flags(self, temp_env):
         # Test that both autotools and cmake work getting no build_system flags
-        s1 = spack.concretize.concretize(spack.spec.Spec("cmake-client"))
+        s1 = spack.concretize.concretize_one(spack.spec.Spec("cmake-client"))
         spack.build_environment.setup_package(s1.package, False)
 
-        s2 = spack.concretize.concretize(spack.spec.Spec("patchelf"))
+        s2 = spack.concretize.concretize_one(spack.spec.Spec("patchelf"))
         spack.build_environment.setup_package(s2.package, False)
 
         # Use cppflags as a canary
@@ -44,28 +44,28 @@ class TestFlagHandlers:
     def test_unbound_method(self, temp_env):
         # Other tests test flag_handlers set as bound methods and functions.
         # This tests an unbound method in python2 (no change in python3).
-        s = spack.concretize.concretize(spack.spec.Spec("mpileaks cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("mpileaks cppflags=-g"))
         s.package.flag_handler = s.package.__class__.inject_flags
         spack.build_environment.setup_package(s.package, False)
         assert os.environ["SPACK_CPPFLAGS"] == "-g"
         assert "CPPFLAGS" not in os.environ
 
     def test_inject_flags(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("mpileaks cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("mpileaks cppflags=-g"))
         s.package.flag_handler = inject_flags
         spack.build_environment.setup_package(s.package, False)
         assert os.environ["SPACK_CPPFLAGS"] == "-g"
         assert "CPPFLAGS" not in os.environ
 
     def test_env_flags(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("mpileaks cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("mpileaks cppflags=-g"))
         s.package.flag_handler = env_flags
         spack.build_environment.setup_package(s.package, False)
         assert os.environ["CPPFLAGS"] == "-g"
         assert "SPACK_CPPFLAGS" not in os.environ
 
     def test_build_system_flags_cmake(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("cmake-client cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("cmake-client cppflags=-g"))
         s.package.flag_handler = build_system_flags
         spack.build_environment.setup_package(s.package, False)
         assert "SPACK_CPPFLAGS" not in os.environ
@@ -77,7 +77,7 @@ class TestFlagHandlers:
         }
 
     def test_build_system_flags_autotools(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("patchelf cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("patchelf cppflags=-g"))
         s.package.flag_handler = build_system_flags
         spack.build_environment.setup_package(s.package, False)
         assert "SPACK_CPPFLAGS" not in os.environ
@@ -86,7 +86,7 @@ class TestFlagHandlers:
 
     def test_build_system_flags_not_implemented(self, temp_env):
         """Test the command line flags method raises a NotImplementedError"""
-        s = spack.concretize.concretize(spack.spec.Spec("mpileaks cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("mpileaks cppflags=-g"))
         s.package.flag_handler = build_system_flags
         try:
             spack.build_environment.setup_package(s.package, False)
@@ -95,7 +95,7 @@ class TestFlagHandlers:
             assert True
 
     def test_add_build_system_flags_autotools(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("patchelf cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("patchelf cppflags=-g"))
         s.package.flag_handler = add_o3_to_build_system_cflags
         spack.build_environment.setup_package(s.package, False)
         assert "-g" in os.environ["SPACK_CPPFLAGS"]
@@ -103,7 +103,7 @@ class TestFlagHandlers:
         assert s.package.configure_flag_args == ["CFLAGS=-O3"]
 
     def test_add_build_system_flags_cmake(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("cmake-client cppflags=-g"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("cmake-client cppflags=-g"))
         s.package.flag_handler = add_o3_to_build_system_cflags
         spack.build_environment.setup_package(s.package, False)
         assert "-g" in os.environ["SPACK_CPPFLAGS"]
@@ -111,7 +111,7 @@ class TestFlagHandlers:
         assert s.package.cmake_flag_args == ["-DCMAKE_C_FLAGS=-O3"]
 
     def test_ld_flags_cmake(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("cmake-client ldflags=-mthreads"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("cmake-client ldflags=-mthreads"))
         s.package.flag_handler = build_system_flags
         spack.build_environment.setup_package(s.package, False)
         assert "SPACK_LDFLAGS" not in os.environ
@@ -123,7 +123,7 @@ class TestFlagHandlers:
         }
 
     def test_ld_libs_cmake(self, temp_env):
-        s = spack.concretize.concretize(spack.spec.Spec("cmake-client ldlibs=-lfoo"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("cmake-client ldlibs=-lfoo"))
         s.package.flag_handler = build_system_flags
         spack.build_environment.setup_package(s.package, False)
         assert "SPACK_LDLIBS" not in os.environ
@@ -139,7 +139,7 @@ class TestFlagHandlers:
             flags.append("-foo")
             return (flags, None, None)
 
-        s = spack.concretize.concretize(spack.spec.Spec("cmake-client"))
+        s = spack.concretize.concretize_one(spack.spec.Spec("cmake-client"))
         s.package.flag_handler = test_flag_handler
         spack.build_environment.setup_package(s.package, False)
 

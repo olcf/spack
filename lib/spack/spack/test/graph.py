@@ -39,7 +39,7 @@ def test_dynamic_dot_graph_mpileaks(default_mock_concretization):
 
 def test_ascii_graph_mpileaks(config, mock_packages, monkeypatch):
     monkeypatch.setattr(spack.graph.AsciiGraph, "_node_label", lambda self, node: node.name)
-    s = spack.concretize.concretize(spack.spec.Spec("mpileaks"))
+    s = spack.concretize.concretize_one(spack.spec.Spec("mpileaks"))
 
     stream = io.StringIO()
     graph = spack.graph.AsciiGraph()
