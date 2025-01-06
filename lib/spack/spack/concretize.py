@@ -191,7 +191,7 @@ def _concretize_task(packed_arguments: Tuple[int, str, TestsType]) -> Tuple[int,
         return index, spec, time.time() - start
 
 
-def concretized(spec: Spec, tests: Union[bool, Iterable[str]] = False) -> Spec:
+def concretized(spec: Spec, tests: TestsType = False) -> Spec:
     """Return a concretized copy of the given spec.
 
     Args:
