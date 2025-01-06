@@ -208,7 +208,7 @@ def concretized(spec: Spec, tests: TestsType = False) -> Spec:
                 f"Spec {node} has no name; cannot concretize an anonymous spec"
             )
 
-    if spec._concrete:
+    if spec.concrete:
         return spec.copy()
 
     allow_deprecated = spack.config.get("config:deprecated", False)
