@@ -83,8 +83,7 @@ def create_installer(
     """Create an installer instance for a list of specs or package names that will be
     concretized."""
     _specs = [
-        spack.concretize.concretize(spack.spec.Spec(s)) if isinstance(s, str) else s
-        for s in specs
+        spack.concretize.concretize(spack.spec.Spec(s)) if isinstance(s, str) else s for s in specs
     ]
     _install_args = {} if install_args is None else install_args
     return inst.PackageInstaller([spec.package for spec in _specs], **_install_args)
