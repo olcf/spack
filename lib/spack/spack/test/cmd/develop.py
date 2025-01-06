@@ -139,7 +139,7 @@ class TestDevelop:
             self.check_develop(e, spack.spec.Spec("mpich@=1.0"), path)
 
             # Check modifications actually worked
-            result = spack.concretize.concretized(spack.spec.Spec("mpich@1.0"))
+            result = spack.concretize.concretize(spack.spec.Spec("mpich@1.0"))
             assert result.satisfies("dev_path=%s" % abspath)
 
     def test_develop_canonicalize_path_no_args(self, monkeypatch):
@@ -167,7 +167,7 @@ class TestDevelop:
             self.check_develop(e, spack.spec.Spec("mpich@=1.0"), path)
 
             # Check modifications actually worked
-            result = spack.concretize.concretized(spack.spec.Spec("mpich@1.0"))
+            result = spack.concretize.concretize(spack.spec.Spec("mpich@1.0"))
             assert result.satisfies("dev_path=%s" % abspath)
 
 
@@ -193,7 +193,7 @@ def test_develop_full_git_repo(
         spack.package_base.PackageBase, "git", "file://%s" % repo_path, raising=False
     )
 
-    spec = spack.concretize.concretized(spack.spec.Spec("git-test-commit@1.2"))
+    spec = spack.concretize.concretize(spack.spec.Spec("git-test-commit@1.2"))
     try:
         spec.package.do_stage()
         commits = _git_commit_list(spec.package.stage[0].source_path)

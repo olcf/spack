@@ -147,7 +147,7 @@ class TestAutotoolsPackage:
 
     def test_libtool_archive_files_are_deleted_by_default(self, mutable_database):
         # Install a package that creates a mock libtool archive
-        s = spack.concretize.concretized(Spec("libtool-deletion"))
+        s = spack.concretize.concretize(Spec("libtool-deletion"))
         PackageInstaller([s.package], explicit=True).install()
 
         # Assert the libtool archive is not there and we have
@@ -162,7 +162,7 @@ class TestAutotoolsPackage:
     ):
         # Install a package that creates a mock libtool archive,
         # patch its package to preserve the installation
-        s = spack.concretize.concretized(Spec("libtool-deletion"))
+        s = spack.concretize.concretize(Spec("libtool-deletion"))
         monkeypatch.setattr(
             type(spack.builder.create(s.package)), "install_libtool_archives", True
         )
@@ -176,7 +176,7 @@ class TestAutotoolsPackage:
         Tests whether only broken config.sub and config.guess are replaced with
         files from working alternatives from the gnuconfig package.
         """
-        s = spack.concretize.concretized(
+        s = spack.concretize.concretize(
             Spec("autotools-config-replacement +patch_config_files +gnuconfig")
         )
         PackageInstaller([s.package]).install()
@@ -197,7 +197,7 @@ class TestAutotoolsPackage:
         """
         Tests whether disabling patch_config_files
         """
-        s = spack.concretize.concretized(
+        s = spack.concretize.concretize(
             Spec("autotools-config-replacement ~patch_config_files +gnuconfig")
         )
         PackageInstaller([s.package]).install()
@@ -224,7 +224,7 @@ class TestAutotoolsPackage:
         enabled, but gnuconfig is not listed as a direct build dependency.
         """
         monkeypatch.setattr(spack.platforms.test.Test, "default", "x86_64")
-        s = spack.concretize.concretized(
+        s = spack.concretize.concretize(
             Spec("autotools-config-replacement +patch_config_files ~gnuconfig")
         )
 
@@ -306,7 +306,7 @@ class TestCMakePackage:
         assert define("SINGLE", "red") == "-DSINGLE:STRING=red"
 
     def test_define_from_variant(self):
-        s = spack.concretize.concretized(Spec("cmake-client multi=up,right ~truthy single=red"))
+        s = spack.concretize.concretize(Spec("cmake-client multi=up,right ~truthy single=red"))
 
         arg = s.package.define_from_variant("MULTI")
         assert arg == "-DMULTI:STRING=right;up"

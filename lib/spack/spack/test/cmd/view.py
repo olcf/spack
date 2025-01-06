@@ -191,7 +191,7 @@ def test_view_fails_with_missing_projections_file(tmpdir):
 def test_view_files_not_ignored(
     tmpdir, mock_packages, mock_archive, mock_fetch, install_mockery, cmd, with_projection
 ):
-    spec = spack.concretize.concretized(Spec("view-not-ignored"))
+    spec = spack.concretize.concretize(Spec("view-not-ignored"))
     pkg = spec.package
     PackageInstaller([pkg], explicit=True).install()
     pkg.assert_installed(spec.prefix)

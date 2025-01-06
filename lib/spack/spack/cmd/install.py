@@ -451,7 +451,7 @@ def concrete_specs_from_file(args):
             else:
                 s = spack.spec.Spec.from_json(f)
 
-        concretized = spack.concretize.concretized(s)
+        concretized = spack.concretize.concretize(s)
         if concretized.dag_hash() != s.dag_hash():
             msg = 'skipped invalid file "{0}". '
             msg += "The file does not contain a concrete spec."

@@ -41,7 +41,7 @@ def test_fetch(type_of_test, secure, mock_hg_repository, config, mutable_mock_re
     h = mock_hg_repository.hash
 
     # Construct the package under test
-    s = spack.concretize.concretized(Spec("hg-test"))
+    s = spack.concretize.concretize(Spec("hg-test"))
     monkeypatch.setitem(s.package.versions, Version("hg"), t.args)
 
     # Enter the stage directory and check some properties

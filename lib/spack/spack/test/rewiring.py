@@ -38,8 +38,8 @@ def check_spliced_spec_prefixes(spliced_spec):
 @pytest.mark.parametrize("transitive", [True, False])
 def test_rewire_db(mock_fetch, install_mockery, transitive):
     """Tests basic rewiring without binary executables."""
-    spec = spack.concretize.concretized(Spec("splice-t^splice-h~foo"))
-    dep = spack.concretize.concretized(Spec("splice-h+foo"))
+    spec = spack.concretize.concretize(Spec("splice-t^splice-h~foo"))
+    dep = spack.concretize.concretize(Spec("splice-h+foo"))
     PackageInstaller([spec.package, dep.package], explicit=True).install()
     spliced_spec = spec.splice(dep, transitive=transitive)
     assert spec.dag_hash() != spliced_spec.dag_hash()
@@ -62,8 +62,8 @@ def test_rewire_db(mock_fetch, install_mockery, transitive):
 @pytest.mark.parametrize("transitive", [True, False])
 def test_rewire_bin(mock_fetch, install_mockery, transitive):
     """Tests basic rewiring with binary executables."""
-    spec = spack.concretize.concretized(Spec("quux"))
-    dep = spack.concretize.concretized(Spec("garply cflags=-g"))
+    spec = spack.concretize.concretize(Spec("quux"))
+    dep = spack.concretize.concretize(Spec("garply cflags=-g"))
     PackageInstaller([spec.package, dep.package], explicit=True).install()
     spliced_spec = spec.splice(dep, transitive=transitive)
 
@@ -91,8 +91,8 @@ def test_rewire_bin(mock_fetch, install_mockery, transitive):
 def test_rewire_writes_new_metadata(mock_fetch, install_mockery):
     """Tests that new metadata was written during a rewire.
     Accuracy of metadata is left to other tests."""
-    spec = spack.concretize.concretized(Spec("quux"))
-    dep = spack.concretize.concretized(Spec("garply cflags=-g"))
+    spec = spack.concretize.concretize(Spec("quux"))
+    dep = spack.concretize.concretize(Spec("garply cflags=-g"))
     PackageInstaller([spec.package, dep.package], explicit=True).install()
     spliced_spec = spec.splice(dep, transitive=True)
     spack.rewiring.rewire(spliced_spec)
@@ -135,8 +135,8 @@ def test_rewire_writes_new_metadata(mock_fetch, install_mockery):
 @pytest.mark.parametrize("transitive", [True, False])
 def test_uninstall_rewired_spec(mock_fetch, install_mockery, transitive):
     """Test that rewired packages can be uninstalled as normal."""
-    spec = spack.concretize.concretized(Spec("quux"))
-    dep = spack.concretize.concretized(Spec("garply cflags=-g"))
+    spec = spack.concretize.concretize(Spec("quux"))
+    dep = spack.concretize.concretize(Spec("garply cflags=-g"))
     PackageInstaller([spec.package, dep.package], explicit=True).install()
     spliced_spec = spec.splice(dep, transitive=transitive)
     spack.rewiring.rewire(spliced_spec)
@@ -149,8 +149,8 @@ def test_uninstall_rewired_spec(mock_fetch, install_mockery, transitive):
 def test_rewire_not_installed_fails(mock_fetch, install_mockery):
     """Tests error when an attempt is made to rewire a package that was not
     previously installed."""
-    spec = spack.concretize.concretized(Spec("quux"))
-    dep = spack.concretize.concretized(Spec("garply cflags=-g"))
+    spec = spack.concretize.concretize(Spec("quux"))
+    dep = spack.concretize.concretize(Spec("garply cflags=-g"))
     spliced_spec = spec.splice(dep, False)
     with pytest.raises(
         spack.rewiring.PackageNotInstalledError,
@@ -164,8 +164,8 @@ def test_rewire_virtual(mock_fetch, install_mockery):
     dep = "splice-a"
     alt_dep = "splice-h"
 
-    spec = spack.concretize.concretized(Spec(f"splice-vt^{dep}"))
-    alt_spec = spack.concretize.concretized(Spec(alt_dep))
+    spec = spack.concretize.concretize(Spec(f"splice-vt^{dep}"))
+    alt_spec = spack.concretize.concretize(Spec(alt_dep))
 
     PackageInstaller([spec.package, alt_spec.package]).install()
 

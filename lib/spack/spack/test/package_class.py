@@ -167,7 +167,7 @@ def setup_install_test(source_paths, test_root):
 )
 def test_cache_extra_sources(install_mockery, spec, sources, extras, expect):
     """Test the package's cache extra test sources helper function."""
-    s = spack.concretize.concretized(spack.spec.Spec(spec))
+    s = spack.concretize.concretize(spack.spec.Spec(spec))
 
     source_path = s.package.stage.source_path
     srcs = [fs.join_path(source_path, src) for src in sources]
@@ -205,7 +205,7 @@ def test_cache_extra_sources(install_mockery, spec, sources, extras, expect):
 
 
 def test_cache_extra_sources_fails(install_mockery):
-    s = spack.concretize.concretized(spack.spec.Spec("pkg-a"))
+    s = spack.concretize.concretize(spack.spec.Spec("pkg-a"))
 
     with pytest.raises(InstallError) as exc_info:
         spack.install_test.cache_extra_test_sources(s.package, ["/a/b", "no-such-file"])

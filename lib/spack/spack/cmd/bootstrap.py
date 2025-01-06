@@ -398,7 +398,7 @@ def _mirror(args):
         llnl.util.tty.msg(msg.format(spec_str, mirror_dir))
         # Suppress tty from the call below for terser messages
         llnl.util.tty.set_msg_enabled(False)
-        spec = spack.concretize.concretized(spack.spec.Spec(spec_str))
+        spec = spack.concretize.concretize(spack.spec.Spec(spec_str))
         for node in spec.traverse():
             spack.mirrors.utils.create(mirror_dir, [node])
         llnl.util.tty.set_msg_enabled(True)

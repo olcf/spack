@@ -199,8 +199,8 @@ class TestSpecList:
 
     def test_spec_list_exclude_with_abstract_hashes(self, mock_packages, install_mockery):
         # Put mpich in the database so it can be referred to by hash.
-        mpich_1 = spack.concretize.concretized(Spec("mpich+debug"))
-        mpich_2 = spack.concretize.concretized(Spec("mpich~debug"))
+        mpich_1 = spack.concretize.concretize(Spec("mpich+debug"))
+        mpich_2 = spack.concretize.concretize(Spec("mpich~debug"))
         PackageInstaller([mpich_1.package, mpich_2.package], explicit=True, fake=True).install()
 
         # Create matrix and exclude +debug, which excludes the first mpich after its abstract hash

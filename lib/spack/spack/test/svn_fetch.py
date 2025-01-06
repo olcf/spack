@@ -41,7 +41,7 @@ def test_fetch(type_of_test, secure, mock_svn_repository, config, mutable_mock_r
     h = mock_svn_repository.hash
 
     # Construct the package under test
-    s = spack.concretize.concretized(Spec("svn-test"))
+    s = spack.concretize.concretize(Spec("svn-test"))
     monkeypatch.setitem(s.package.versions, Version("svn"), t.args)
 
     # Enter the stage directory and check some properties

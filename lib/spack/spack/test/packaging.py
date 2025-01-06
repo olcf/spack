@@ -41,7 +41,7 @@ pytestmark = pytest.mark.not_on_windows("does not run on windows")
 @pytest.mark.usefixtures("install_mockery", "mock_gnupghome")
 def test_buildcache(mock_archive, tmp_path, monkeypatch, mutable_config):
     # Install a test package
-    spec = spack.concretize.concretized(Spec("trivial-install-test-package"))
+    spec = spack.concretize.concretize(Spec("trivial-install-test-package"))
     monkeypatch.setattr(spec.package, "fetcher", URLFetchStrategy(url=mock_archive.url))
     PackageInstaller([spec.package], explicit=True).install()
     pkghash = "/" + str(spec.dag_hash(7))

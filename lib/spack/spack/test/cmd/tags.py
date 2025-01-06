@@ -48,7 +48,7 @@ def test_tags_no_tags(monkeypatch):
 
 
 def test_tags_installed(install_mockery, mock_fetch):
-    s = spack.concretize.concretized(spack.spec.Spec("mpich"))
+    s = spack.concretize.concretize(spack.spec.Spec("mpich"))
     PackageInstaller([s.package], explicit=True, fake=True).install()
 
     out = tags("-i")

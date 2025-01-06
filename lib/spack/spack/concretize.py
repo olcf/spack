@@ -187,11 +187,11 @@ def _concretize_task(packed_arguments: Tuple[int, str, TestsType]) -> Tuple[int,
     index, spec_str, tests = packed_arguments
     with tty.SuppressOutput(msg_enabled=False):
         start = time.time()
-        spec = concretized(Spec(spec_str), tests=tests)
+        spec = concretize(Spec(spec_str), tests=tests)
         return index, spec, time.time() - start
 
 
-def concretized(spec: Spec, tests: TestsType = False) -> Spec:
+def concretize(spec: Spec, tests: TestsType = False) -> Spec:
     """Return a concretized copy of the given spec.
 
     Args:
@@ -200,7 +200,7 @@ def concretized(spec: Spec, tests: TestsType = False) -> Spec:
     """
     from spack.solver.asp import Solver, SpecBuilder
 
-    spec.replace_hash()
+    spec = spec.lookup_hash()
 
     for node in spec.traverse():
         if not node.name:

@@ -66,7 +66,7 @@ def test_single_file_verify_cmd(tmpdir):
 def test_single_spec_verify_cmd(tmpdir, mock_packages, mock_archive, mock_fetch, install_mockery):
     # Test the verify command interface to verify a single spec
     install("libelf")
-    s = spack.concretize.concretized(spack.spec.Spec("libelf"))
+    s = spack.concretize.concretize(spack.spec.Spec("libelf"))
     prefix = s.prefix
     hash = s.dag_hash()
 

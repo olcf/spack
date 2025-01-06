@@ -193,7 +193,7 @@ def test_from_list_url(mock_packages, config, spec, url, digest, _fetch_method):
     have checksums in the package.
     """
     with spack.config.override("config:url_fetch_method", _fetch_method):
-        s = spack.concretize.concretized(Spec(spec))
+        s = spack.concretize.concretize(Spec(spec))
         fetch_strategy = fs.from_list_url(s.package)
         assert isinstance(fetch_strategy, fs.URLFetchStrategy)
         assert os.path.basename(fetch_strategy.url) == url
@@ -219,7 +219,7 @@ def test_new_version_from_list_url(
 ):
     """Test non-specific URLs from the url-list-test package."""
     with spack.config.override("config:url_fetch_method", _fetch_method):
-        s = spack.concretize.concretized(Spec(f"url-list-test @{requested_version}"))
+        s = spack.concretize.concretize(Spec(f"url-list-test @{requested_version}"))
         fetch_strategy = fs.from_list_url(s.package)
 
         assert isinstance(fetch_strategy, fs.URLFetchStrategy)
@@ -233,7 +233,7 @@ def test_new_version_from_list_url(
 
 def test_nosource_from_list_url(mock_packages, config):
     """This test confirms BundlePackages do not have list url."""
-    s = spack.concretize.concretized(Spec("nosource"))
+    s = spack.concretize.concretize(Spec("nosource"))
     fetch_strategy = fs.from_list_url(s.package)
     assert fetch_strategy is None
 

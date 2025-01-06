@@ -115,7 +115,7 @@ def dev_build(self, args):
 
     # Forces the build to run out of the source directory.
     spec.constrain("dev_path=%s" % source_path)
-    spec = spack.concretize.concretized(spec)
+    spec = spack.concretize.concretize(spec)
 
     if spec.installed:
         tty.error("Already installed in %s" % spec.prefix)

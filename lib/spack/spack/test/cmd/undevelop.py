@@ -31,9 +31,9 @@ spack:
 
         env("create", "test", "./spack.yaml")
         with ev.read("test"):
-            before = spack.concretize.concretized(spack.spec.Spec("mpich"))
+            before = spack.concretize.concretize(spack.spec.Spec("mpich"))
             undevelop("mpich")
-            after = spack.concretize.concretized(spack.spec.Spec("mpich"))
+            after = spack.concretize.concretize(spack.spec.Spec("mpich"))
 
     # Removing dev spec from environment changes concretization
     assert before.satisfies("dev_path=*")
