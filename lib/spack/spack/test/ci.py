@@ -55,7 +55,7 @@ def test_pipeline_dag(config, tmpdir):
     builder.add_package("pkg-a", dependencies=[("pkg-b", None, None), ("pkg-c", None, None)])
 
     with repo.use_repositories(builder.root):
-        spec_a = Spec("pkg-a").concretized()
+        spec_a = spack.concretize.concretize_one(Spec("pkg-a"))
 
         key_a = ci.common.PipelineDag.key(spec_a)
         key_b = ci.common.PipelineDag.key(spec_a["pkg-b"])

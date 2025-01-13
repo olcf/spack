@@ -543,10 +543,10 @@ With either interpreter you can run a single command:
 
 .. code-block:: console
 
-   $ spack python -c 'from spack.spec import Spec; Spec("python").concretized()'
+   $ spack python -c 'from spack.spec import Spec; from spack.concretize import concretize_one; concretize_one(Spec("python"))'
    ...
 
-   $ spack python -i ipython -c 'from spack.spec import Spec; Spec("python").concretized()'
+   $ spack python -i ipython -c 'from spack.spec import Spec; from spack.concretize import concretize_one; concretize_one(Spec("python"))'
    Out[1]: ...
 
 or a file:
