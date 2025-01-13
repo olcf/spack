@@ -191,7 +191,7 @@ def _concretize_task(packed_arguments: Tuple[int, str, TestsType]) -> Tuple[int,
         return index, spec, time.time() - start
 
 
-def concretize_one(spec: Spec, tests: TestsType = False) -> Spec:
+def concretize_one(spec: Union[str, Spec], tests: TestsType = False) -> Spec:
     """Return a concretized copy of the given spec.
 
     Args:
@@ -200,6 +200,8 @@ def concretize_one(spec: Spec, tests: TestsType = False) -> Spec:
     """
     from spack.solver.asp import Solver, SpecBuilder
 
+    if isinstance(spec, str):
+        spec = Spec(spec)
     spec = spec.lookup_hash()
 
     if spec.concrete:
