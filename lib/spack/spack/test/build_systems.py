@@ -147,7 +147,7 @@ class TestAutotoolsPackage:
 
     def test_libtool_archive_files_are_deleted_by_default(self, mutable_database):
         # Install a package that creates a mock libtool archive
-        s = spack.concretize.concretize_one(Spec("libtool-deletion"))
+        s = spack.concretize.concretize_one("libtool-deletion")
         PackageInstaller([s.package], explicit=True).install()
 
         # Assert the libtool archive is not there and we have
@@ -162,7 +162,7 @@ class TestAutotoolsPackage:
     ):
         # Install a package that creates a mock libtool archive,
         # patch its package to preserve the installation
-        s = spack.concretize.concretize_one(Spec("libtool-deletion"))
+        s = spack.concretize.concretize_one("libtool-deletion")
         monkeypatch.setattr(
             type(spack.builder.create(s.package)), "install_libtool_archives", True
         )
@@ -306,7 +306,7 @@ class TestCMakePackage:
         assert define("SINGLE", "red") == "-DSINGLE:STRING=red"
 
     def test_define_from_variant(self):
-        s = spack.concretize.concretize_one(Spec("cmake-client multi=up,right ~truthy single=red"))
+        s = spack.concretize.concretize_one("cmake-client multi=up,right ~truthy single=red")
 
         arg = s.package.define_from_variant("MULTI")
         assert arg == "-DMULTI:STRING=right;up"

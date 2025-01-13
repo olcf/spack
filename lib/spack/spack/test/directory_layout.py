@@ -60,7 +60,7 @@ def test_yaml_directory_layout_parameters(tmpdir, default_mock_concretization):
     assert package7 == path_package7
 
     # Test separation of architecture or namespace
-    spec2 = spack.concretize.concretize_one(Spec("libelf"))
+    spec2 = spack.concretize.concretize_one("libelf")
 
     arch_scheme = (
         "{architecture.platform}/{architecture.target}/{architecture.os}/{name}/{version}/{hash:7}"

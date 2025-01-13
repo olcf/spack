@@ -16,7 +16,6 @@ import spack.paths as spack_paths
 import spack.repo as repo
 import spack.spec
 import spack.util.git
-from spack.spec import Spec
 
 pytestmark = [pytest.mark.usefixtures("mock_packages")]
 
@@ -55,7 +54,7 @@ def test_pipeline_dag(config, tmpdir):
     builder.add_package("pkg-a", dependencies=[("pkg-b", None, None), ("pkg-c", None, None)])
 
     with repo.use_repositories(builder.root):
-        spec_a = spack.concretize.concretize_one(Spec("pkg-a"))
+        spec_a = spack.concretize.concretize_one("pkg-a")
 
         key_a = ci.common.PipelineDag.key(spec_a)
         key_b = ci.common.PipelineDag.key(spec_a["pkg-b"])

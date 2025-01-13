@@ -22,7 +22,7 @@ class CacheManager:
         self.concr_specs = []
 
     def __enter__(self):
-        self.concr_specs = [spack.concretize.concretize_one(Spec(s)) for s in self.req_specs]
+        self.concr_specs = [spack.concretize.concretize_one(s) for s in self.req_specs]
         for s in self.concr_specs:
             PackageInstaller([s.package], fake=True, explicit=True).install()
 
@@ -63,13 +63,13 @@ def _has_build_dependency(spec: Spec, name: str):
 def test_simple_reuse(splicing_setup):
     with CacheManager(["splice-z@1.0.0+compat"]):
         spack.config.set("packages", _make_specs_non_buildable(["splice-z"]))
-        assert spack.concretize.concretize_one(Spec("splice-z")).satisfies(Spec("splice-z"))
+        assert spack.concretize.concretize_one("splice-z").satisfies(Spec("splice-z"))
 
 
 def test_simple_dep_reuse(splicing_setup):
     with CacheManager(["splice-z@1.0.0+compat"]):
         spack.config.set("packages", _make_specs_non_buildable(["splice-z"]))
-        assert spack.concretize.concretize_one(Spec("splice-h@1")).satisfies(Spec("splice-h@1"))
+        assert spack.concretize.concretize_one("splice-h@1").satisfies(Spec("splice-h@1"))
 
 
 def test_splice_installed_hash(splicing_setup):
@@ -127,10 +127,10 @@ def test_virtual_multi_splices_in(splicing_setup):
         spack.config.set("packages", _make_specs_non_buildable(["depends-on-virtual-with-abi"]))
         for gs in goal_specs:
             with pytest.raises(Exception):
-                spack.concretize.concretize_one(Spec(gs))
+                spack.concretize.concretize_one(gs)
         _enable_splicing()
         for gs in goal_specs:
-            assert spack.concretize.concretize_one(Spec(gs)).satisfies(gs)
+            assert spack.concretize.concretize_one(gs).satisfies(gs)
 
 
 def test_virtual_multi_can_be_spliced(splicing_setup):
@@ -146,10 +146,10 @@ def test_virtual_multi_can_be_spliced(splicing_setup):
         spack.config.set("packages", _make_specs_non_buildable(["depends-on-virtual-with-abi"]))
         for gs in goal_specs:
             with pytest.raises(Exception):
-                spack.concretize.concretize_one(Spec(gs))
+                spack.concretize.concretize_one(gs)
         _enable_splicing()
         for gs in goal_specs:
-            assert spack.concretize.concretize_one(Spec(gs)).satisfies(gs)
+            assert spack.concretize.concretize_one(gs).satisfies(gs)
 
 
 def test_manyvariant_star_matching_variant_splice(splicing_setup):

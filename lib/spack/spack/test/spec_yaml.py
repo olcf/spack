@@ -108,7 +108,7 @@ def test_roundtrip_concrete_specs(abstract_spec, default_mock_concretization):
 
 
 def test_yaml_subdag(config, mock_packages):
-    spec = spack.concretize.concretize_one(Spec("mpileaks^mpich+debug"))
+    spec = spack.concretize.concretize_one("mpileaks^mpich+debug")
     yaml_spec = Spec.from_yaml(spec.to_yaml())
     json_spec = Spec.from_json(spec.to_json())
 
@@ -153,7 +153,7 @@ def test_ordered_read_not_required_for_consistent_dag_hash(config, mock_packages
     """
     specs = ["mpileaks ^zmpi", "dttop", "dtuse"]
     for spec in specs:
-        spec = spack.concretize.concretize_one(Spec(spec))
+        spec = spack.concretize.concretize_one(spec)
 
         #
         # Dict & corresponding YAML & JSON from the original spec.
@@ -325,7 +325,7 @@ def test_save_dependency_spec_jsons_subset(tmpdir, config):
     builder.add_package("pkg-a", dependencies=[("pkg-b", None, None), ("pkg-c", None, None)])
 
     with spack.repo.use_repositories(builder.root):
-        spec_a = spack.concretize.concretize_one(Spec("pkg-a"))
+        spec_a = spack.concretize.concretize_one("pkg-a")
         b_spec = spec_a["pkg-b"]
         c_spec = spec_a["pkg-c"]
 

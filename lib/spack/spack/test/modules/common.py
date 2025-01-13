@@ -21,7 +21,6 @@ import spack.repo
 import spack.spec
 from spack.installer import PackageInstaller
 from spack.modules.common import UpstreamModuleIndex
-from spack.spec import Spec
 
 pytestmark = [
     pytest.mark.not_on_windows("does not run on windows"),
@@ -181,7 +180,7 @@ module_index:
 @pytest.mark.regression("14347")
 def test_load_installed_package_not_in_repo(install_mockery, mock_fetch, monkeypatch):
     """Test that installed packages that have been removed are still loadable"""
-    spec = spack.concretize.concretize_one(Spec("trivial-install-test-package"))
+    spec = spack.concretize.concretize_one("trivial-install-test-package")
     PackageInstaller([spec.package], explicit=True).install()
     spack.modules.module_types["tcl"](spec, "default", True).write()
 

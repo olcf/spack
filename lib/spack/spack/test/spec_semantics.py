@@ -590,7 +590,7 @@ class TestSpecSemantics:
         https://github.com/spack/spack/pull/2386#issuecomment-282147639
         is handled correctly.
         """
-        a = spack.concretize.concretize_one(Spec("pkg-a foobar=bar"))
+        a = spack.concretize.concretize_one("pkg-a foobar=bar")
 
         assert a.satisfies("foobar=bar")
         assert a.satisfies("foobar=*")
@@ -609,18 +609,18 @@ class TestSpecSemantics:
         assert "^pkg-b" in a
 
     def test_unsatisfied_single_valued_variant(self):
-        a = spack.concretize.concretize_one(Spec("pkg-a foobar=baz"))
+        a = spack.concretize.concretize_one("pkg-a foobar=baz")
         assert "^pkg-b" not in a
 
-        mv = spack.concretize.concretize_one(Spec("multivalue-variant"))
+        mv = spack.concretize.concretize_one("multivalue-variant")
         assert "pkg-a@1.0" not in mv
 
     def test_indirect_unsatisfied_single_valued_variant(self):
-        spec = spack.concretize.concretize_one(Spec("singlevalue-variant-dependent"))
+        spec = spack.concretize.concretize_one("singlevalue-variant-dependent")
         assert "pkg-a@1.0" not in spec
 
     def test_satisfied_namespace(self):
-        spec = spack.concretize.concretize_one(Spec("zlib"))
+        spec = spack.concretize.concretize_one("zlib")
         assert spec.satisfies("namespace=builtin.mock")
         assert not spec.satisfies("namespace=builtin")
 
@@ -700,7 +700,7 @@ class TestSpecSemantics:
             spack.concretize.concretize_one(a)
 
     def test_copy_satisfies_transitive(self):
-        spec = spack.concretize.concretize_one(Spec("dttop"))
+        spec = spack.concretize.concretize_one("dttop")
         copy = spec.copy()
         for s in spec.traverse():
             assert s.satisfies(copy[s.name])
@@ -723,7 +723,7 @@ class TestSpecSemantics:
 
     def test_intersectable_concrete_specs_must_have_the_same_hash(self):
         """Ensure that concrete specs are matched *exactly* by hash."""
-        s1 = spack.concretize.concretize_one(Spec("mpileaks"))
+        s1 = spack.concretize.concretize_one("mpileaks")
         s2 = s1.copy()
 
         assert s1.satisfies(s2)
@@ -763,10 +763,10 @@ class TestSpecSemantics:
 
     @pytest.mark.usefixtures("config")
     def test_virtual_index(self):
-        s = spack.concretize.concretize_one(Spec("callpath"))
-        s_mpich = spack.concretize.concretize_one(Spec("callpath ^mpich"))
-        s_mpich2 = spack.concretize.concretize_one(Spec("callpath ^mpich2"))
-        s_zmpi = spack.concretize.concretize_one(Spec("callpath ^zmpi"))
+        s = spack.concretize.concretize_one("callpath")
+        s_mpich = spack.concretize.concretize_one("callpath ^mpich")
+        s_mpich2 = spack.concretize.concretize_one("callpath ^mpich2")
+        s_zmpi = spack.concretize.concretize_one("callpath ^zmpi")
 
         assert s["mpi"].name != "mpi"
         assert s_mpich["mpi"].name == "mpich"
@@ -1036,7 +1036,7 @@ class TestSpecSemantics:
             spec.prefix
 
     def test_forwarding_of_architecture_attributes(self):
-        spec = spack.concretize.concretize_one(Spec("libelf target=x86_64"))
+        spec = spack.concretize.concretize_one("libelf target=x86_64")
 
         # Check that we can still access each member through
         # the architecture attribute
@@ -1500,7 +1500,7 @@ class TestSpecSemantics:
     )
     def test_unsatisfiable_virtual_deps_bindings(self, spec_str):
         with pytest.raises(spack.solver.asp.UnsatisfiableSpecError):
-            spack.concretize.concretize_one(Spec(spec_str))
+            spack.concretize.concretize_one(spec_str)
 
 
 @pytest.mark.parametrize(
@@ -1598,7 +1598,7 @@ def test_spec_format_path_posix(spec_str, format_str, expected, mock_git_test_pa
 def test_is_extension_after_round_trip_to_dict(config, mock_packages, spec_str):
     # x is constructed directly from string, y from a
     # round-trip to dict representation
-    x = spack.concretize.concretize_one(Spec(spec_str))
+    x = spack.concretize.concretize_one(spec_str)
     y = Spec.from_dict(x.to_dict())
 
     # Using 'y' since the round-trip make us lose build dependencies
@@ -1699,7 +1699,7 @@ def test_call_dag_hash_on_old_dag_hash_spec(mock_packages, default_mock_concreti
 
 
 def test_spec_trim(mock_packages, config):
-    top = spack.concretize.concretize_one(Spec("dt-diamond"))
+    top = spack.concretize.concretize_one("dt-diamond")
     top.trim("dt-diamond-left")
     remaining = set(x.name for x in top.traverse())
     assert set(["dt-diamond", "dt-diamond-right", "dt-diamond-bottom"]) == remaining
@@ -1712,7 +1712,7 @@ def test_spec_trim(mock_packages, config):
 @pytest.mark.regression("30861")
 def test_concretize_partial_old_dag_hash_spec(mock_packages, config):
     # create an "old" spec with no package hash
-    bottom = spack.concretize.concretize_one(Spec("dt-diamond-bottom"))
+    bottom = spack.concretize.concretize_one("dt-diamond-bottom")
     delattr(bottom, "_package_hash")
 
     dummy_hash = "zd4m26eis2wwbvtyfiliar27wkcv3ehk"
@@ -1941,7 +1941,7 @@ def test_edge_equality_does_not_depend_on_virtual_order():
 
 
 def test_old_format_strings_trigger_error(default_mock_concretization):
-    s = spack.concretize.concretize_one(Spec("pkg-a"))
+    s = spack.concretize.concretize_one("pkg-a")
     with pytest.raises(SpecFormatStringError):
         s.format("${PACKAGE}-${VERSION}-${HASH}")
 

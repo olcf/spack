@@ -1695,7 +1695,7 @@ def test_stage(mock_stage, mock_fetch, install_mockery):
     root = str(mock_stage)
 
     def check_stage(spec):
-        spec = spack.concretize.concretize_one(Spec(spec))
+        spec = spack.concretize.concretize_one(spec)
         for dep in spec.traverse():
             stage_name = f"{stage_prefix}{dep.name}-{dep.version}-{dep.dag_hash()}"
             assert os.path.isdir(os.path.join(root, stage_name))

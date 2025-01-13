@@ -44,7 +44,7 @@ def set_up_package(name, repository, url_attr):
     2. Point the package's version args at that repo.
     """
     # Set up packages to point at mock repos.
-    s = spack.concretize.concretize_one(Spec(name))
+    s = spack.concretize.concretize_one(name)
     repos[name] = repository
 
     # change the fetch args of the first (only) version.
@@ -61,7 +61,7 @@ def check_mirror():
         mirrors = {"spack-mirror-test": url_util.path_to_file_url(mirror_root)}
         with spack.config.override("mirrors", mirrors):
             with spack.config.override("config:checksum", False):
-                specs = [spack.concretize.concretize_one(Spec(x)) for x in repos]
+                specs = [spack.concretize.concretize_one(x) for x in repos]
                 spack.mirrors.utils.create(mirror_root, specs)
 
             # Stage directory exists
@@ -78,7 +78,7 @@ def check_mirror():
 
             # Now try to fetch each package.
             for name, mock_repo in repos.items():
-                spec = spack.concretize.concretize_one(Spec(name))
+                spec = spack.concretize.concretize_one(name)
                 pkg = spec.package
 
                 with spack.config.override("config:checksum", False):
@@ -221,7 +221,7 @@ def test_mirror_archive_paths_no_version(mock_packages, mock_archive):
 
 
 def test_mirror_with_url_patches(mock_packages, monkeypatch):
-    spec = spack.concretize.concretize_one(Spec("patch-several-dependencies"))
+    spec = spack.concretize.concretize_one("patch-several-dependencies")
     files_cached_in_mirror = set()
 
     def record_store(_class, fetcher, relative_dst, cosmetic_path=None):

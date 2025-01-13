@@ -19,7 +19,6 @@ import spack.store
 import spack.user_environment as uenv
 from spack.enums import InstallRecordStatus
 from spack.main import SpackCommand
-from spack.spec import Spec
 from spack.test.conftest import create_test_repo
 from spack.test.utilities import SpackCommandArgs
 from spack.util.pattern import Bunch
@@ -202,7 +201,7 @@ def test_find_json_deps(database):
 @pytest.mark.db
 def test_display_json(database, capsys):
     specs = [
-        spack.concretize.concretize_one(Spec(s))
+        spack.concretize.concretize_one(s)
         for s in ["mpileaks ^zmpi", "mpileaks ^mpich", "mpileaks ^mpich2"]
     ]
 
@@ -218,7 +217,7 @@ def test_display_json(database, capsys):
 @pytest.mark.db
 def test_display_json_deps(database, capsys):
     specs = [
-        spack.concretize.concretize_one(Spec(s))
+        spack.concretize.concretize_one(s)
         for s in ["mpileaks ^zmpi", "mpileaks ^mpich", "mpileaks ^mpich2"]
     ]
 
@@ -278,7 +277,7 @@ mpileaks-2.3
 def test_find_format_deps_paths(database, config):
     output = find("-dp", "--format", "{name}-{version}", "mpileaks", "^zmpi")
 
-    spec = spack.concretize.concretize_one(Spec("mpileaks ^zmpi"))
+    spec = spack.concretize.concretize_one("mpileaks ^zmpi")
     prefixes = [s.prefix for s in spec.traverse()]
 
     assert (
@@ -303,7 +302,7 @@ def test_find_very_long(database, config):
     output = find("-L", "--no-groups", "mpileaks")
 
     specs = [
-        spack.concretize.concretize_one(Spec(s))
+        spack.concretize.concretize_one(s)
         for s in ["mpileaks ^zmpi", "mpileaks ^mpich", "mpileaks ^mpich2"]
     ]
 
